@@ -1,4 +1,4 @@
-# Reddit r/place Overlay script for place-canada
+# Reddit r/place Overlay Script for r/placecanada
 
 ## Installation
 
