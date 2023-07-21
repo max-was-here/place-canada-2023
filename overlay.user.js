@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         r/place 2023 Canada Overlay
 // @namespace    http://tampermonkey.net/
-// @version      0.5
+// @version      0.7
 // @description  Script that adds a button to toggle an hardcoded image shown in the 2023's r/place canvas
 // @author       max-was-here
 // @match        https://garlic-bread.reddit.com/embed*
@@ -12,19 +12,39 @@
 if (window.top !== window.self) {
   addEventListener('load', () => {
     // ==============================================
+    const STORAGE_KEY = 'place-canada-2023-ostate';
+    const OVERLAYS = [
+      "https://d35ule242s0wem.cloudfront.net/overlay.full.png",
+      "https://d35ule242s0wem.cloudfront.net/overlay.dot.png"
+    ];
 
-    const OVERLAY_IMAGE_MAX_OPACITY = '0.9';
+    let oState = {
+      opacity: 90,
+      overlayIdx: 0
+    };
 
-    // ==============================================
-    // Insert image
+    const oStateStorage = localStorage.getItem(STORAGE_KEY);
+    if(oStateStorage !== null) {
+      try {
+        oState = Object.assign({}, oState, JSON.parse(oStateStorage));
+      } catch(e){}
+    }
 
     const img = document.createElement('img');
     img.style.pointerEvents = 'none';
     img.style.position = 'absolute';
     img.style.imageRendering = 'pixelated';
-    img.style.opacity = OVERLAY_IMAGE_MAX_OPACITY;
-    // img.style.outline = '2px inset grey';
+    img.src = OVERLAYS[oState.overlayIdx];
+    img.style.opacity = oState.opacity;
+    img.style.top = '0px';
+    img.style.left = '0px';
+    img.style.width = '1000px';
+    img.style.height = '1000px';
     img.style.zIndex = '100';
+    img.onload = () => {
+      console.log('loaded');
+      img.style.opacity = oState.opacity / 100;
+    };
 
     const mainContainer = document
       .querySelector('garlic-bread-embed')
@@ -37,72 +57,87 @@ if (window.top !== window.self) {
     // ==============================================
     // Add buttons to toggle overlay
 
-    const pillButtonContainer = mainContainer.querySelector(
-      'garlic-bread-status-pill'
-    ).shadowRoot;
+    const buttonsWrapper = document.createElement('div');
+    buttonsWrapper.style.position = "absolute";
+    buttonsWrapper.style.bottom = "25px";
+    buttonsWrapper.style.right = "25px";
+    mainContainer.appendChild(buttonsWrapper);
 
+    const saveState = () => {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(oState));
+    }
 
-    const toggleOverlay = (e) => {
-      img.style.opacity === OVERLAY_IMAGE_MAX_OPACITY
-        ? (img.style.opacity = '0')
-        : (img.style.opacity = OVERLAY_IMAGE_MAX_OPACITY);
+    const changeOpacity = (e) => {
+      oState.opacity = e.target.value
+      img.style.opacity = oState.opacity / 100;
+      saveState();
     };
 
-    const loadOverlay = () => {
-      const name = "canada";
-      const url = "https://d35ule242s0wem.cloudfront.net/overlay.png";
-      const x = 0;
-      const y = 0;
-      const width = 1000;
-      const height = 1000;
-
-      img.src = url;
-      img.style.top = `${y}px`;
-      img.style.left = `${x}px`;
-      if (width && height) {
-        img.style.width = `${width}px`;
-        img.style.height = `${height}px`;
+    const switchOverlay = () => {
+      oState.overlayIdx++;
+      if(oState.overlayIdx >= OVERLAYS.length){
+        oState.overlayIdx = 0;
       }
-      img.style.opacity = OVERLAY_IMAGE_MAX_OPACITY;
+      img.src = OVERLAYS[oState.overlayIdx];
+      img.style.opacity = oState.opacity / 100;
+      saveState();
     };
 
-    const createButton = (text, subtext, onClick, id) => {
-      const buttonChild = document.createElement('div');
-      buttonChild.classList.add('pixeled', 'fullscreen');
-      buttonChild.style.backgroundColor = "#333";
-      const buttonText = document.createElement('div');
-      buttonText.classList.add('main-text');
-      buttonText.innerText = text;
-      if (id) {
-        buttonText.id = id;
-      }
-      buttonChild.appendChild(buttonText);
-      const buttonSecondaryText = document.createElement('div');
-      buttonSecondaryText.classList.add('secondary-text');
-      buttonSecondaryText.innerText = subtext;
-      buttonChild.appendChild(buttonSecondaryText);
+    const addButton = (text, onClick) => {
       const button = document.createElement('button');
       button.onclick = onClick;
-      button.appendChild(buttonChild);
+      button.style.width = "100px";
+      button.style.height = "45px";
+      button.style.backgroundColor = "#555";
+      button.style.color = "white";
+      button.style.border = "var(--pixel-border)";
+      button.style.boxShadow = "var(--pixel-box-shadow)";
+      button.style.fontFamily = "var(--garlic-bread-font-pixel)";
 
-      pillButtonContainer.appendChild(button);
+      button.innerText = text;
+
+      buttonsWrapper.appendChild(button);
     };
 
-    loadOverlay();
+    const addSlider = (text, min, max, val, onChange) => {
+      const opacityWrapper = document.createElement('div');
+      opacityWrapper.style.width = "100px";
+      opacityWrapper.style.height = "45px";
+      opacityWrapper.style.backgroundColor = "#555";
+      opacityWrapper.style.color = "white";
+      opacityWrapper.style.border = "var(--pixel-border)";
+      opacityWrapper.style.boxShadow = "var(--pixel-box-shadow)";
+      opacityWrapper.style.fontFamily = "var(--garlic-bread-font-pixel)";
+      opacityWrapper.style.marginTop = "15px";
+      opacityWrapper.style.textAlign = "center";
+      opacityWrapper.innerText = text;
 
-    setInterval(() => {
-      // Shadow root content gets replaced after placing a square, so this is a hacky way to detect the buttons were removed and re-add them
-      const toggleOverlayButton = pillButtonContainer.querySelector(
-        '#overlay-toggle-child'
-      );
-      if (!toggleOverlayButton) {
-        createButton(
-          'Toggle',
-          'overlay',
-          toggleOverlay,
-          'overlay-toggle-child'
-        );
-      }
-    }, 500);
+      const opacitySlider = document.createElement('input');
+      opacitySlider.type = "range";
+      opacitySlider.min = min;
+      opacitySlider.max = max;
+      opacitySlider.value = val;
+      opacitySlider.style.webkitAppearance = "none";
+      opacitySlider.style.appearance = "none";
+      opacitySlider.style.height = "15px";
+      opacitySlider.style.width = "95px";
+      opacitySlider.style.borderRadius = "5px";
+      opacitySlider.style.background = "#d3d3d3";
+      opacitySlider.style.outline = "none";
+      opacitySlider.oninput = onChange;
+
+      opacityWrapper.appendChild(opacitySlider);
+      buttonsWrapper.appendChild(opacityWrapper);
+    };
+
+    addButton(
+      'Switch Overlay',
+      switchOverlay
+    );
+    addSlider(
+      'Opacity',
+      0, 100, oState.opacity,
+      changeOpacity
+    );
   });
 }
