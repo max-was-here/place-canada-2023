@@ -1,0 +1,38 @@
+ignored_colors = [
+    #000000, # filter black, DO NOT USE "#"!!!
+]
+allowed_colors = [
+    #000000, # allow black, DO NOT USE "#"!!!
+    "FF4500",
+    "FFA800",
+    "FFD635",
+    "00A368",
+    "3690EA",
+    "B44AC0",
+    "000000",
+    "FFFFFF"
+]
+width = 2000
+height = 2000
+add-x = 500
+add-y = 500
+
+default_prio = 120 # priority: higher number = higher chance of being placed
+
+
+# example:
+# [[structure]]
+# name = "flagge-ost"
+# file = "flagge-ost.png"
+# priority_file = "flagge-ost_prio.png"
+# startx = 1332
+# starty = 1122
+# priority = 127
+# overlay_only = false
+
+[[structure]]
+name = "canada"
+file = "canada.provinces.png"
+startx = 681
+starty = -154
+priority = 127
