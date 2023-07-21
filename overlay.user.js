@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         r/place 2023 Canada Overlay
 // @namespace    http://tampermonkey.net/
-// @version      0.8.0
+// @version      0.8.1
 // @description  Script that adds a button to toggle an hardcoded image shown in the 2023's r/place canvas
 // @author       max-was-here
 // @match        https://garlic-bread.reddit.com/embed*
@@ -14,8 +14,8 @@ if (window.top !== window.self) {
     // ==============================================
     const STORAGE_KEY = 'place-canada-2023-ostate';
     const OVERLAYS = [
-      "https://d35ule242s0wem.cloudfront.net/overlay2.dot.png",
-      "https://d35ule242s0wem.cloudfront.net/overlay2.full.png"
+      "https://raw.githubusercontent.com/max-was-here/place-canada-2023/master/outputs/overlay2.dot.png",
+      "https://raw.githubusercontent.com/max-was-here/place-canada-2023/master/outputs/overlay2.full.png"
     ];
 
     let oState = {
