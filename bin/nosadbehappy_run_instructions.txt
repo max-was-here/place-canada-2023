@@ -1,0 +1,4 @@
+run in C:\Users\trevo\Documents\github\place-canada-2023
+
+
+"C:\Users\trevo\Documents\github\place-canada-2023\venv\Scripts\python.exe" pixel.py --config ";;C:\Users\trevo\Documents\github\place-canada-2023\outputs/overlay2.dot.png;;;;1;0;1;1" --config ";;C:\Users\trevo\Documents\github\place-canada-2023\outputs/overlay2.full.png;;;;0;0;1;1" C:\Users\trevo\Documents\github\place-canada-2023\pictures C:\Users\trevo\Documents\github\place-canada-2023\target_config.toml
