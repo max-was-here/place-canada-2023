@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         r/place 2023 Canada Overlay
 // @namespace    http://tampermonkey.net/
-// @version      0.8.1
+// @version      0.9.0
 // @description  Script that adds a button to toggle an hardcoded image shown in the 2023's r/place canvas
 // @author       max-was-here
 // @match        https://garlic-bread.reddit.com/embed*
@@ -22,6 +22,7 @@ if (window.top !== window.self) {
       opacity: 90,
       overlayIdx: 0
     };
+    let cnter = 0;
 
     const oStateStorage = localStorage.getItem(STORAGE_KEY);
     if(oStateStorage !== null) {
@@ -47,11 +48,11 @@ if (window.top !== window.self) {
     };
 
     const mainContainer = document
-      .querySelector('garlic-bread-embed')
-      .shadowRoot.querySelector('.layout');
+        .querySelector('garlic-bread-embed')
+        .shadowRoot.querySelector('.layout');
     const positionContainer = mainContainer
-      .querySelector('garlic-bread-canvas')
-      .shadowRoot.querySelector('.container');
+        .querySelector('garlic-bread-canvas')
+        .shadowRoot.querySelector('.container');
     positionContainer.appendChild(img);
 
     // ==============================================
@@ -131,13 +132,18 @@ if (window.top !== window.self) {
     };
 
     addButton(
-      'Switch Overlay',
-      switchOverlay
+        'Switch Overlay',
+        switchOverlay
     );
     addSlider(
-      'Opacity',
-      0, 100, oState.opacity,
-      changeOpacity
+        'Opacity',
+        0, 100, oState.opacity,
+        changeOpacity
     );
+
+    // Interval to reload the overlay image automatically
+    setInterval(() => {
+      img.src = `${OVERLAYS[oState.overlayIdx]}?${cnter++}` ;
+    }, 1000 * 60 * 5);
   });
 }
