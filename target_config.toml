@@ -23,7 +23,7 @@ allowed_colors = [
 width = 2000
 height = 2000
 add-x = 1000
-add-y = 500
+add-y = 1000
 
 default_prio = 120 # priority: higher number = higher chance of being placed
 
@@ -42,5 +42,5 @@ default_prio = 120 # priority: higher number = higher chance of being placed
 name = "canada"
 file = "canada.provinces.png"
 startx = 680
-starty = -576
+starty = -613
 priority = 127
