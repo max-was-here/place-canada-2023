@@ -22,8 +22,8 @@ allowed_colors = [
 ]
 width = 2000
 height = 2000
-add-x = 500
-add-y = 500
+add-x = 1000
+add-y = 1000
 
 default_prio = 120 # priority: higher number = higher chance of being placed
 
