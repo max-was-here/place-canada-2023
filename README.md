@@ -7,6 +7,17 @@
 3. Accept it and the next time r/place is loaded you should see a "Toggle Overlay button"
 4. Refresh your browser periodically to load any potential update to the overlay image
 
+## Troubleshooting
+
+### Tampermonkey being blocked
+
+> For anyone else that might be struggling with the template not working, but you are in the correct area. I found an extra step I had to do that was blocking Tampermonkey from working.  
+Right-click the Tampermonkey extension in the top right of the browser, move down to 'This can read and change site data ->' and make sure that's set to either 'on reddit.com' or to 'on all sites'... mine was set to the top one, 'when you click the extension', and therefore it wasn't working. As soon as I switched it, and refreshed, it was working!
+
+### Support
+
+Please each out in the **#overlay-help** channel of the [r/placecanada discord](https://discord.gg/placecanada-959145637922889728)
+for any issue with the overlay.
 
 ## For maintainers
 
