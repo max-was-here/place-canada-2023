@@ -41,6 +41,6 @@ default_prio = 120 # priority: higher number = higher chance of being placed
 [[structure]]
 name = "canada"
 file = "canada.provinces.png"
-startx = 680
+startx = 679
 starty = -613
 priority = 127
