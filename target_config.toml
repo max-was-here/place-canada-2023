@@ -42,5 +42,5 @@ default_prio = 120 # priority: higher number = higher chance of being placed
 name = "canada"
 file = "canada.provinces.png"
 startx = 90
-starty = 125
+starty = 150
 priority = 127
