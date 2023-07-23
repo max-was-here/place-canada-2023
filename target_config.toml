@@ -49,6 +49,6 @@ priority = 127
 [[structure]]
 name = "goose"
 file = "goose.full.png"
-startx = 528
-starty = 808
+startx = 186
+starty = 739
 priority = 120
