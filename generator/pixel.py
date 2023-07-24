@@ -224,22 +224,26 @@ def generate_data(img: Image, prio_img: Optional[Image.Image], both_img: Optiona
     """
     # store already present pixels
     coords: dict[(int, int), (str, int)] = {}
-    # strucutres
+    # structures
     structures: dict[str, dict[(int, int), (str, int)]] = {}
     # guard for illegal overwrites
     success = True
     for struct in reversed(pixel_config["structure"]):
         struct2: dict[(int, int), (str, int)] = {}
         # open stuff and prepare
+        name = struct["name"]
+        if struct.get("disabled", False):
+            logger.info(f"SKipping {name}, it is disabled!")
+            continue
         file = struct["file"]
-        priority = max(int(struct.get("priority", default_prio)), 255)
+        priority = min(int(struct.get("priority", default_prio)), 255)
         priority_file = struct.get("priority_file", None)
         startx = int(struct.get("startx")) + add_x
         assert startx >= 0
         starty = int(struct.get("starty")) + add_y
         assert starty >= 0
-        name = struct["name"]
         logger.info(f"Adding file {file} for structure {name}")
+        prio_in_picture = struct.get("prio_in_picture", False)
         if struct.get("overlay_only", False) and not cfg.is_overlay:
             logger.info(f"Skipping {name} because it should be skipped on overlays!")
             continue
@@ -249,18 +253,24 @@ def generate_data(img: Image, prio_img: Optional[Image.Image], both_img: Optiona
         p = pathlib.Path(picture_folder).joinpath(file)
         path_exists(p)
         input_img = Image.open(p)
+        input_img = input_img.convert("RGBA")
         input_prio = None
         if priority_file and not cfg.ignore_prio:
             p_file = pathlib.Path(picture_folder).joinpath(priority_file)
             input_prio = Image.open(p_file)
+            input_prio = input_prio.convert("RGBA")
+
+        size_mult = 3 if cfg.is_overlay else 1
+        single_img = Image.new("RGBA", (input_img.width * size_mult, input_img.height * size_mult), "#00000000")
 
         # for each pixel
         for x in range(input_img.size[0]):
             x1 = x + startx
             for y in range(input_img.size[1]):
                 y1 = y + starty
-                if x1 >= img.width or y1 >= img.height:
+                if shift_coord(x1) >= img.width or shift_coord(y1) >= img.height:
                     out_of_image = True
+                    continue
                 # get color as hex (for json later)
                 color = input_img.getpixel((x, y))
                 hex_color = col_to_hex(color[0], color[1], color[2])
@@ -272,7 +282,16 @@ def generate_data(img: Image, prio_img: Optional[Image.Image], both_img: Optiona
                 # get prio if needed
                 prio = 255
                 if not cfg.ignore_prio:
-                    prio = color[3] if len(color) > 3 else priority
+                    if prio_in_picture:
+                        prio = color[3] if len(color) > 3 else priority
+                    else:
+                        if len(color) > 3:
+                            if cfg.min_prio <= color[3]:
+                                prio = priority
+                            else:
+                                continue
+                        else:
+                            prio = priority
                     if input_prio:
                         prio = input_prio.getpixel((x, y))[0]
                     if prio < cfg.min_prio:
@@ -295,11 +314,13 @@ def generate_data(img: Image, prio_img: Optional[Image.Image], both_img: Optiona
                 # store pixel
                 coords.update({(x1, y1): (hex_color, prio)})
                 struct2.update({(x1, y1): (hex_color, prio)})
+                single_img.putpixel((shift_coord(x), shift_coord(y)), hex_to_col(hex_color));
         structures.update({name: struct2})
         if wrong_colors:
             logger.warning(f"\"{name}\" has wrong_colors colors!\n    {', '.join(wrong_colors)}")
         if out_of_image:
             logger.warning(f"Ran out of normal image with config: '{cfg.cfg}', image: \"{name}\"")
+        save(False, f"../outputs/{struct.get('name')}.{'dot' if cfg.is_overlay else 'full'}.png", single_img)
 
     # generate json and put pixels into images
     for name, struct_data in structures.items():
@@ -313,8 +334,8 @@ def generate_data(img: Image, prio_img: Optional[Image.Image], both_img: Optiona
                 exit(1)
             img.putpixel(shifted_coords, hex_to_col(data[0]))
             if not cfg.ignore_prio:
-                p = hex_to_col(data[0])[0]
-                prio_img.putpixel(shifted_coords, (p, p, p))
+                p = data[1]
+                prio_img.putpixel(shifted_coords, (p, 0, 0))
                 both_img.putpixel(shifted_coords, (*hex_to_col(data[0]), p))
         pixels_json.update({name: temp})
     return success
@@ -339,3 +360,31 @@ if __name__ == "__main__":
 
     for cfg in args.config:
         work_config(cfg, args.picture_folder)
+
+    json_path = "../outputs/userscript.config.json"
+    userscript_config = {
+        "l": []
+    }
+    with open(json_path, 'r') as openfile:
+        # Reading from json file
+        json_object = json.load(openfile)
+        userscript_config['v'] = json_object.get('v') + 1
+
+    for struct in reversed(pixel_config["structure"]):
+        p = pathlib.Path(args.picture_folder).joinpath(struct["file"])
+        path_exists(p)
+        input_img = Image.open(p)
+        struct_data = {
+            "x": struct["startx"] + add_x,
+            "y": struct["starty"] + add_y,
+            "w": input_img.width,
+            "h": input_img.height,
+            "s": [
+                f"https://raw.githubusercontent.com/max-was-here/place-canada-2023/master/outputs/{struct.get('name')}.dot.png",
+                f"https://raw.githubusercontent.com/max-was-here/place-canada-2023/master/outputs/{struct.get('name')}.full.png"
+            ]
+        }
+        userscript_config['l'].append(struct_data)
+    json_str = json.dumps(userscript_config)
+    with open(json_path, "w+") as f:
+        f.write(json_str)

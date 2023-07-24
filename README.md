@@ -30,10 +30,12 @@ for any issue with the overlay.
 ### Overlay image generation
 
 1. You will need python version 3.11+ in order to generate the overlay
-2. Generate a local venv : `python3 -m venv ./venv`
-3. Install requirement : `./venv/bin/pip install -r ./requirements.txt`
-4. Run the generation script : `./bin/generate.sh`
-5. New overlay images should be under `./outputs`
+2. Move your cli into the generator directory : `cd ./generator`
+3. Generate a local venv : `python3 -m venv ./venv`
+4. Activate the venv : `source ./venv/bin/activate` (Unix) or `source ./venv/Scripts/activate/` (Windows)
+5. Install requirement : `pip install -r ./requirements.txt`
+6. Run the generation script : `./generate.sh` 
+7. New overlay images should be under `./outputs`
 
 ### Deploy the new overlay
 

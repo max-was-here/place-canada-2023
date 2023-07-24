@@ -1,29 +1,32 @@
 // ==UserScript==
 // @name         r/place 2023 Canada Overlay
-// @namespace    http://tampermonkey.net/
-// @version      0.9.3
-// @description  Script that adds a button to toggle an hardcoded image shown in the 2023's r/place canvas
+// @namespace    https://github.com/max-was-here/place-canada-2023
+// @version      1.0.5
+// @description  Script to add one or multiple overlay images to 2023 r/place canvas
 // @author       max-was-here
 // @match        https://garlic-bread.reddit.com/embed*
 // @icon         https://www.redditstatic.com/desktop2x/img/favicon/favicon-32x32.png
-// @grant        none
+// @grant        GM.xmlHttpRequest
 // ==/UserScript==
+
 
 if (window.top !== window.self) {
   addEventListener('load', () => {
-    // ==============================================
+    // Constants
+    const CONFIG_LOCATION = 'https://raw.githubusercontent.com/max-was-here/place-canada-2023/master/outputs/userscript.config.json';
+    const UPDATE_CHECK_INTERVAL = 5 * 60 * 1000;
     const STORAGE_KEY = 'place-canada-2023-ostate';
-    const OVERLAYS = [
-      "https://raw.githubusercontent.com/max-was-here/place-canada-2023/master/outputs/overlay2.dot.png",
-      "https://raw.githubusercontent.com/max-was-here/place-canada-2023/master/outputs/overlay2.full.png"
-    ];
 
+    // Config vars
+    let configDataChecksum = "";
+    let configData = {v:0, l:[]};
+    let displayedImgs = [];
+
+    // Load state
     let oState = {
       opacity: 75,
       overlayIdx: 0
     };
-    let cnter = 0;
-
     const oStateStorage = localStorage.getItem(STORAGE_KEY);
     if(oStateStorage !== null) {
       try {
@@ -31,32 +34,13 @@ if (window.top !== window.self) {
       } catch(e){}
     }
 
-    const img = document.createElement('img');
-    img.style.pointerEvents = 'none';
-    img.style.position = 'absolute';
-    img.style.imageRendering = 'pixelated';
-    img.src = OVERLAYS[oState.overlayIdx];
-    img.style.opacity = oState.opacity;
-    img.style.top = '0px';
-    img.style.left = '0px';
-    img.style.width = '4000px';
-    img.style.height = '4000px';
-    img.style.zIndex = '100';
-    img.onload = () => {
-      console.log('loaded');
-      img.style.opacity = oState.opacity / 100;
-    };
-
+    // Ui Vars
     const mainContainer = document
         .querySelector('garlic-bread-embed')
         .shadowRoot.querySelector('.layout');
     const positionContainer = mainContainer
         .querySelector('garlic-bread-canvas')
         .shadowRoot.querySelector('.container');
-    positionContainer.appendChild(img);
-
-    // ==============================================
-    // Add buttons to toggle overlay
 
     const buttonsWrapper = document.createElement('div');
     buttonsWrapper.style.position = "absolute";
@@ -64,23 +48,59 @@ if (window.top !== window.self) {
     buttonsWrapper.style.right = "25px";
     mainContainer.appendChild(buttonsWrapper);
 
+    // Config functions
+    const checksum = (s) => {
+      var chk = 0x12345678;
+      var len = s.length;
+      for (var i = 0; i < len; i++) {
+        chk += (s.charCodeAt(i) * (i + 1));
+      }
+
+      return (chk & 0xffffffff).toString(16);
+    };
+
+    const loadNewConfig = (dataStr) => {
+      try {
+        configDataChecksum = checksum(dataStr);
+        configData = JSON.parse(dataStr);
+      } catch (e) {
+        alert('An error occurred while starting the script. Please wait a bit and refresh the page.');
+        return;
+      }
+
+      // Remove currently displayed images
+      displayedImgs.forEach((img) => {
+        img.parentNode.removeChild(img);
+      });
+      displayedImgs = [];
+
+      configData['l'].forEach((cfg, idx) => {
+        addImg(cfg, idx);
+      });
+    }
+
     const saveState = () => {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(oState));
     }
 
+    // UI Functions
     const changeOpacity = (e) => {
       oState.opacity = e.target.value
-      img.style.opacity = oState.opacity / 100;
+      displayedImgs.forEach(img => {
+        img.style.opacity = oState.opacity / 100;
+      });
       saveState();
     };
 
     const switchOverlay = () => {
       oState.overlayIdx++;
-      if(oState.overlayIdx >= OVERLAYS.length){
+      if(oState.overlayIdx >= 2){
         oState.overlayIdx = 0;
       }
-      img.src = OVERLAYS[oState.overlayIdx];
-      img.style.opacity = oState.opacity / 100;
+      displayedImgs.forEach(img => {
+        img.src = `${configData['l'][img.dataset.idx].s[oState.overlayIdx]}?${configDataChecksum}`;
+        img.style.opacity = oState.opacity / 100;
+      });
       saveState();
     };
 
@@ -94,6 +114,7 @@ if (window.top !== window.self) {
       button.style.border = "var(--pixel-border)";
       button.style.boxShadow = "var(--pixel-box-shadow)";
       button.style.fontFamily = "var(--garlic-bread-font-pixel)";
+      button.style.cursor = "pointer";
 
       button.innerText = text;
 
@@ -131,6 +152,26 @@ if (window.top !== window.self) {
       buttonsWrapper.appendChild(opacityWrapper);
     };
 
+    addImg = (imgConfig, idx) => {
+      const img = document.createElement('img');
+      img.style.pointerEvents = 'none';
+      img.style.position = 'absolute';
+      img.style.imageRendering = 'pixelated';
+      img.src = `${imgConfig.s[oState.overlayIdx]}?${configDataChecksum}`;
+      img.style.opacity = oState.opacity;
+      img.style.top = `${imgConfig.y}px`;
+      img.style.left = `${imgConfig.x}px`;
+      img.style.width = `${imgConfig.w}px`;
+      img.style.height = `${imgConfig.h}px`;
+      img.style.zIndex = '100';
+      img.dataset.idx = idx;
+      img.onload = () => {
+        img.style.opacity = oState.opacity / 100;
+      };
+      displayedImgs.push(img);
+      positionContainer.appendChild(img);
+    };
+
     addButton(
         'Switch Overlay',
         switchOverlay
@@ -141,9 +182,30 @@ if (window.top !== window.self) {
         changeOpacity
     );
 
-    // Interval to reload the overlay image automatically
-    setInterval(() => {
-      img.src = `${OVERLAYS[oState.overlayIdx]}?${cnter++}` ;
-    }, 1000 * 60 * 5);
+    GM.xmlHttpRequest({
+      method: 'GET',
+      url: `${CONFIG_LOCATION}?${Date.now()}`,
+      onload: (response) => {
+        if (response.status < 200 || response.status > 299) {
+          alert('An error occured while loading the config. Please wait a bit and refresh the page.');
+          return;
+        }
+
+        loadNewConfig(response.responseText);
+
+        setInterval(() => {
+          GM.xmlHttpRequest({
+            method: 'GET',
+            url: `${CONFIG_LOCATION}?${Date.now()}`,
+            onload: async (response) => {
+              const newChecksum = checksum(response.responseText);
+              if (configDataChecksum === newChecksum) return;
+
+              loadNewConfig(response.responseText)
+            }
+          });
+        }, UPDATE_CHECK_INTERVAL);
+      }
+    });
   });
 }
