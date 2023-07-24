@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         r/place 2023 Canada Overlay
 // @namespace    https://github.com/max-was-here/place-canada-2023
-// @version      1.0.1
+// @version      1.0.2
 // @description  Script to add one or multiple overlay images to 2023 r/place canvas
 // @author       max-was-here
 // @match        https://garlic-bread.reddit.com/embed*
@@ -19,7 +19,7 @@ if (window.top !== window.self) {
 
     // Config vars
     let configDataChecksum = "";
-    let configData = [];
+    let configData = {v:0, l:[]};
     let displayedImgs = [];
 
     // Load state
@@ -74,7 +74,7 @@ if (window.top !== window.self) {
       });
       displayedImgs = [];
 
-      configData.forEach((cfg, idx) => {
+      configData['l'].forEach((cfg, idx) => {
         addImg(cfg, idx);
       });
     }
@@ -98,7 +98,7 @@ if (window.top !== window.self) {
         oState.overlayIdx = 0;
       }
       displayedImgs.forEach(img => {
-        img.src = `${configData[img.dataset.idx].s[oState.overlayIdx]}?${configDataChecksum}`;
+        img.src = `${configData['l'][img.dataset.idx].s[oState.overlayIdx]}?${configDataChecksum}`;
         img.style.opacity = oState.opacity / 100;
       });
       saveState();

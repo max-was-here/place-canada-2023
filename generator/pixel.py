@@ -361,7 +361,14 @@ if __name__ == "__main__":
     for cfg in args.config:
         work_config(cfg, args.picture_folder)
 
-    userscript_config = []
+    json_path = "../outputs/userscript.config.json"
+    userscript_config = {
+        "l": []
+    }
+    with open(json_path, 'r') as openfile:
+        # Reading from json file
+        json_object = json.load(openfile)
+        userscript_config['v'] = json_object.get('v') + 1
 
     for struct in reversed(pixel_config["structure"]):
         p = pathlib.Path(args.picture_folder).joinpath(struct["file"])
@@ -377,7 +384,7 @@ if __name__ == "__main__":
                 f"https://raw.githubusercontent.com/max-was-here/place-canada-2023/rewrite/outputs/{struct.get('name')}.full.png"
             ]
         }
-        userscript_config.append(struct_data)
+        userscript_config['l'].append(struct_data)
     json_str = json.dumps(userscript_config)
-    with open("../outputs/userscript.config.json", "w+") as f:
+    with open(json_path, "w+") as f:
         f.write(json_str)
