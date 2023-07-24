@@ -39,7 +39,7 @@ if (window.top !== window.self) {
     img.style.opacity = oState.opacity;
     img.style.top = '0px';
     img.style.left = '0px';
-    img.style.width = '2000px';
+    img.style.width = '2500px';
     img.style.height = '2000px';
     img.style.zIndex = '100';
     img.onload = () => {
