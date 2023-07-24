@@ -1,34 +1,10 @@
-ignored_colors = [
-    #000000, # filter black, DO NOT USE "#"!!!
-]
-allowed_colors = [
-    #000000, # allow black, DO NOT USE "#"!!!
-    "FF4500",
-    "FFA800",
-    "FFD635",
-    "00A368",
-    "7EED56",
-    "2450A4",
-    "3690EA",
-    "51E9F4",
-    "811E9F",
-    "B44AC0",
-    "FF99AA",
-    "9C6926",
-    "000000",
-    "898D90",
-    "D4D7D9",
-    "FFFFFF",
-    "BE0039",
-    "6D492F"
-]
+ignored_colors = []
+allowed_colors = ["BE0039","FF4500","FFA800","FFD635","00A368","00CC78","7EED56","00756F","009EAA","2450A4","3690EA","51E9F4","493AC1","6A5CFF","811E9F","B44AC0","FF3881","FF99AA","6D482F","9C6926","000000","898D90","D4D7D9","FFFFFF"]
 width = 4000
 height = 4000
 add-x = 1500
 add-y = 1000
-
-default_prio = 120 # priority: higher number = higher chance of being placed
-
+default_prio = 120
 
 # example:
 # [[structure]]
@@ -54,3 +30,10 @@ priority = 127
  startx = -1320
  starty = 40
  priority = 120
+
+ [[structure]]
+ name = "love_geese"
+ file = "love_geese.png"
+ startx = -1148
+ starty = 15
+ priority = 110
