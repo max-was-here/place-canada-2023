@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         r/place 2023 Canada Overlay
 // @namespace    https://github.com/max-was-here/place-canada-2023
-// @version      1.0.3
+// @version      1.0.4
 // @description  Script to add one or multiple overlay images to 2023 r/place canvas
 // @author       max-was-here
 // @match        https://garlic-bread.reddit.com/embed*
@@ -184,7 +184,7 @@ if (window.top !== window.self) {
 
     GM.xmlHttpRequest({
       method: 'GET',
-      url: CONFIG_LOCATION,
+      url: `${CONFIG_LOCATION}?${Date.now()}`,
       onload: (response) => {
         if (response.status < 200 || response.status > 299) {
           alert('An error occured while loading the config. Please wait a bit and refresh the page.');
@@ -196,7 +196,7 @@ if (window.top !== window.self) {
         setInterval(() => {
           GM.xmlHttpRequest({
             method: 'GET',
-            url: CONFIG_LOCATION,
+            url: `${CONFIG_LOCATION}?${Date.now()}`,
             onload: async (response) => {
               const newChecksum = checksum(response.responseText);
               if (configDataChecksum === newChecksum) return;
