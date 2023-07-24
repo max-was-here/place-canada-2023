@@ -45,9 +45,9 @@ priority = 127
  starty = 332
  priority = 125
 
- [[structure]]
- name = "scotland"
- file = "scotland.png"
- startx = 1380
- starty = 333
- priority = 90
+# [[structure]]
+# name = "scotland"
+# file = "scotland.png"
+# startx = 1380
+# starty = 333
+# priority = 90
