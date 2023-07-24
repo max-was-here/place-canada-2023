@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         r/place 2023 Canada Overlay
 // @namespace    http://tampermonkey.net/
-// @version      1.0.6
+// @version      1.0.7
 // @description  Script to add one or multiple overlay images to 2023 r/place canvas
 // @author       max-was-here
 // @match        https://garlic-bread.reddit.com/embed*
@@ -79,6 +79,14 @@ if (window.top !== window.self) {
       });
     }
 
+    const refreshImages = (dataStr) => {
+      // Remove currently displayed images
+      displayedImgs.forEach(img => {
+        let imgSrc = img.src.split('?')[0];
+        img.src = `${configData['l'][img.dataset.idx].s[oState.overlayIdx]}?${Date.now()}`
+      });
+    }
+
     const saveState = () => {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(oState));
     }
@@ -98,7 +106,7 @@ if (window.top !== window.self) {
         oState.overlayIdx = 0;
       }
       displayedImgs.forEach(img => {
-        img.src = `${configData['l'][img.dataset.idx].s[oState.overlayIdx]}?${configDataChecksum}`;
+        img.src = `${configData['l'][img.dataset.idx].s[oState.overlayIdx]}?${Date.now()}`;
         img.style.opacity = oState.opacity / 100;
       });
       saveState();
@@ -199,7 +207,10 @@ if (window.top !== window.self) {
             url: `${CONFIG_LOCATION}?${Date.now()}`,
             onload: async (response) => {
               const newChecksum = checksum(response.responseText);
-              if (configDataChecksum === newChecksum) return;
+              if (configDataChecksum === newChecksum){
+                refreshImages();
+                return;
+              }
 
               loadNewConfig(response.responseText)
             }
