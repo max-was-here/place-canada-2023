@@ -22,8 +22,8 @@ allowed_colors = [
     "BE0039",
     "6D492F"
 ]
-width = 2000
-height = 2000
+width = 4000
+height = 4000
 add-x = 1000
 add-y = 1500
 
