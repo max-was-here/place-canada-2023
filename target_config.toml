@@ -23,13 +23,13 @@ startx = 90
 starty = 150
 priority = 127
 
-
- [[structure]]
- name = "goose"
- file = "goose.full.png"
- startx = -1320
- starty = 40
- priority = 120
+#
+# [[structure]]
+# name = "goose"
+# file = "goose.full.png"
+# startx = -1320
+# starty = 40
+# priority = 120
 
  [[structure]]
  name = "love_geese"
@@ -44,3 +44,10 @@ priority = 127
  startx = 1411
  starty = 332
  priority = 125
+
+ [[structure]]
+ name = "scotland"
+ file = "scotland.png"
+ startx = 1380
+ starty = 333
+ priority = 90
