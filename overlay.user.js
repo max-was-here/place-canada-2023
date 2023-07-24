@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         r/place 2023 Canada Overlay
 // @namespace    http://tampermonkey.net/
-// @version      0.9.1
+// @version      0.9.2
 // @description  Script that adds a button to toggle an hardcoded image shown in the 2023's r/place canvas
 // @author       max-was-here
 // @match        https://garlic-bread.reddit.com/embed*
