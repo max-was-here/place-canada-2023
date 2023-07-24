@@ -42,5 +42,5 @@ priority = 127
  name = "goose2"
  file = "goose2.full.png"
  startx = 1411
- starty = 266
+ starty = 332
  priority = 125
