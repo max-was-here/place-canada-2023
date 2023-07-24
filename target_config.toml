@@ -18,7 +18,9 @@ allowed_colors = [
     "000000",
     "898D90",
     "D4D7D9",
-    "FFFFFF"
+    "FFFFFF",
+    "BE0039",
+    "6D492F"
 ]
 width = 2000
 height = 2000
