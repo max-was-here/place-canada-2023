@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         r/place 2023 Canada Overlay
 // @namespace    http://tampermonkey.net/
-// @version      0.9.2
+// @version      0.9.3
 // @description  Script that adds a button to toggle an hardcoded image shown in the 2023's r/place canvas
 // @author       max-was-here
 // @match        https://garlic-bread.reddit.com/embed*
@@ -19,7 +19,7 @@ if (window.top !== window.self) {
     ];
 
     let oState = {
-      opacity: 90,
+      opacity: 75,
       overlayIdx: 0
     };
     let cnter = 0;
@@ -60,7 +60,7 @@ if (window.top !== window.self) {
 
     const buttonsWrapper = document.createElement('div');
     buttonsWrapper.style.position = "absolute";
-    buttonsWrapper.style.bottom = "75px";
+    buttonsWrapper.style.top = "25px";
     buttonsWrapper.style.right = "25px";
     mainContainer.appendChild(buttonsWrapper);
 
