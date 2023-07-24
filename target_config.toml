@@ -24,9 +24,9 @@ starty = 150
 priority = 127
 
 
-# [[structure]]
-# name = "goose"
-# file = "goose.full.png"
-# startx = 500
-# starty = 901
-# priority = 120
+ [[structure]]
+ name = "goose"
+ file = "goose.full.png"
+ startx = -1320
+ starty = 40
+ priority = 120

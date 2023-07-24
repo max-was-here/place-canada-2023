@@ -260,6 +260,9 @@ def generate_data(img: Image, prio_img: Optional[Image.Image], both_img: Optiona
             input_prio = Image.open(p_file)
             input_prio = input_prio.convert("RGBA")
 
+        size_mult = 3 if cfg.is_overlay else 1
+        single_img = Image.new("RGBA", (input_img.width * size_mult, input_img.height * size_mult), "#00000000")
+
         # for each pixel
         for x in range(input_img.size[0]):
             x1 = x + startx
@@ -311,11 +314,13 @@ def generate_data(img: Image, prio_img: Optional[Image.Image], both_img: Optiona
                 # store pixel
                 coords.update({(x1, y1): (hex_color, prio)})
                 struct2.update({(x1, y1): (hex_color, prio)})
+                single_img.putpixel((shift_coord(x), shift_coord(y)), hex_to_col(hex_color));
         structures.update({name: struct2})
         if wrong_colors:
             logger.warning(f"\"{name}\" has wrong_colors colors!\n    {', '.join(wrong_colors)}")
         if out_of_image:
             logger.warning(f"Ran out of normal image with config: '{cfg.cfg}', image: \"{name}\"")
+        save(False, f"../outputs/{struct.get('name')}.{'dot' if cfg.is_overlay else 'full'}.png", single_img)
 
     # generate json and put pixels into images
     for name, struct_data in structures.items():
@@ -355,3 +360,24 @@ if __name__ == "__main__":
 
     for cfg in args.config:
         work_config(cfg, args.picture_folder)
+
+    userscript_config = []
+
+    for struct in reversed(pixel_config["structure"]):
+        p = pathlib.Path(args.picture_folder).joinpath(struct["file"])
+        path_exists(p)
+        input_img = Image.open(p)
+        struct_data = {
+            "x": struct["startx"] + add_x,
+            "y": struct["starty"] + add_y,
+            "w": input_img.width,
+            "h": input_img.height,
+            "s": [
+                f"https://raw.githubusercontent.com/max-was-here/place-canada-2023/rewrite/outputs/{struct.get('name')}.dot.png",
+                f"https://raw.githubusercontent.com/max-was-here/place-canada-2023/rewrite/outputs/{struct.get('name')}.full.png"
+            ]
+        }
+        userscript_config.append(struct_data)
+    json_str = json.dumps(userscript_config)
+    with open("../outputs/userscript.config.json", "w+") as f:
+        f.write(json_str)

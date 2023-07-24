@@ -75,8 +75,8 @@ if (window.top !== window.self) {
       });
       displayedImgs = [];
 
-      configData.forEach(cfg => {
-        addImg(cfg);
+      configData.forEach((cfg, idx) => {
+        addImg(cfg, idx);
       });
     }
 
@@ -99,7 +99,7 @@ if (window.top !== window.self) {
         oState.overlayIdx = 0;
       }
       displayedImgs.forEach(img => {
-        img.src = img.s[oState.overlayIdx];
+        img.src = `${configData[img.dataset.idx].s[oState.overlayIdx]}?${configDataChecksum}`;
         img.style.opacity = oState.opacity / 100;
       });
       saveState();
@@ -153,18 +153,19 @@ if (window.top !== window.self) {
       buttonsWrapper.appendChild(opacityWrapper);
     };
 
-    addImg = (imgConfig) => {
+    addImg = (imgConfig, idx) => {
       const img = document.createElement('img');
       img.style.pointerEvents = 'none';
       img.style.position = 'absolute';
       img.style.imageRendering = 'pixelated';
-      img.src = imgConfig.s[oState.overlayIdx];
+      img.src = `${imgConfig.s[oState.overlayIdx]}?${configDataChecksum}`;
       img.style.opacity = oState.opacity;
       img.style.top = imgConfig.y;
       img.style.left = imgConfig.x;
       img.style.width = imgConfig.w;
       img.style.height = imgConfig.h;
       img.style.zIndex = '100';
+      img.dataset.idx = idx;
       img.onload = () => {
         console.log('loaded');
         img.style.opacity = oState.opacity / 100;
