@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         r/place 2023 Canada Overlay
 // @namespace    http://tampermonkey.net/
-// @version      1.0.7
+// @version      1.0.8
 // @description  Script to add one or multiple overlay images to 2023 r/place canvas
 // @author       max-was-here
 // @match        https://garlic-bread.reddit.com/embed*
@@ -14,7 +14,7 @@ if (window.top !== window.self) {
   addEventListener('load', () => {
     // Constants
     const CONFIG_LOCATION = 'https://raw.githubusercontent.com/max-was-here/place-canada-2023/master/outputs/userscript.config.json';
-    const UPDATE_CHECK_INTERVAL = 5 * 60 * 1000;
+    const UPDATE_CHECK_INTERVAL = 2 * 60 * 1000;
     const STORAGE_KEY = 'place-canada-2023-ostate';
 
     // Config vars
