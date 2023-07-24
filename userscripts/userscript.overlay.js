@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         r/place 2023 Canada Overlay
-// @namespace    http://tampermonkey.net/
-// @version      1.0.0
+// @namespace    https://github.com/max-was-here/place-canada-2023
+// @version      1.0.1
 // @description  Script to add one or multiple overlay images to 2023 r/place canvas
 // @author       max-was-here
 // @match        https://garlic-bread.reddit.com/embed*
@@ -41,7 +41,6 @@ if (window.top !== window.self) {
     const positionContainer = mainContainer
         .querySelector('garlic-bread-canvas')
         .shadowRoot.querySelector('.container');
-    positionContainer.appendChild(img);
 
     const buttonsWrapper = document.createElement('div');
     buttonsWrapper.style.position = "absolute";
@@ -160,16 +159,17 @@ if (window.top !== window.self) {
       img.style.imageRendering = 'pixelated';
       img.src = `${imgConfig.s[oState.overlayIdx]}?${configDataChecksum}`;
       img.style.opacity = oState.opacity;
-      img.style.top = imgConfig.y;
-      img.style.left = imgConfig.x;
-      img.style.width = imgConfig.w;
-      img.style.height = imgConfig.h;
+      img.style.top = `${imgConfig.y}px`;
+      img.style.left = `${imgConfig.x}px`;
+      img.style.width = `${imgConfig.w}px`;
+      img.style.height = `${imgConfig.h}px`;
       img.style.zIndex = '100';
       img.dataset.idx = idx;
       img.onload = () => {
-        console.log('loaded');
         img.style.opacity = oState.opacity / 100;
       };
+      displayedImgs.push(img);
+      positionContainer.appendChild(img);
     };
 
     addButton(
