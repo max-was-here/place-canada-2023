@@ -380,8 +380,8 @@ if __name__ == "__main__":
             "w": input_img.width,
             "h": input_img.height,
             "s": [
-                f"https://raw.githubusercontent.com/max-was-here/place-canada-2023/rewrite/outputs/{struct.get('name')}.dot.png",
-                f"https://raw.githubusercontent.com/max-was-here/place-canada-2023/rewrite/outputs/{struct.get('name')}.full.png"
+                f"https://raw.githubusercontent.com/max-was-here/place-canada-2023/master/outputs/{struct.get('name')}.dot.png",
+                f"https://raw.githubusercontent.com/max-was-here/place-canada-2023/master/outputs/{struct.get('name')}.full.png"
             ]
         }
         userscript_config['l'].append(struct_data)
