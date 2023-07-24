@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         r/place 2023 Canada Overlay
 // @namespace    https://github.com/max-was-here/place-canada-2023
-// @version      1.0.2
+// @version      1.0.3
 // @description  Script to add one or multiple overlay images to 2023 r/place canvas
 // @author       max-was-here
 // @match        https://garlic-bread.reddit.com/embed*
