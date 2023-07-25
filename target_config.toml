@@ -41,8 +41,8 @@ priority = 127
  [[structure]]
  name = "canada_miniheart"
  file = "canada_miniheart.png"
- startx = -1134
- starty = -977
+ startx = -1092
+ starty = -998
  priority = 125
 
  [[structure]]
