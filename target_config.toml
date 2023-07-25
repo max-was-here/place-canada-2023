@@ -38,6 +38,13 @@ priority = 127
  starty = 332
  priority = 125
 
+ [[structure]]
+ name = "canada_miniheart"
+ file = "canada_miniheart.png"
+ startx = -1189
+ starty = -988
+ priority = 125
+
 # [[structure]]
 # name = "scotland"
 # file = "scotland.png"
