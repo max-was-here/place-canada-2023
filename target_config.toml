@@ -52,6 +52,13 @@ priority = 127
  starty = -688
  priority = 125
 
+ [[structure]]
+ name = "canada_babypole"
+ file = "canada_babypole.png"
+ startx = -1217
+ starty = -897
+ priority = 125
+
 # [[structure]]
 # name = "scotland"
 # file = "scotland.png"
