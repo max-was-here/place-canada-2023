@@ -2,7 +2,9 @@ import argparse
 import base64
 import json
 import logging
+import os
 import pathlib
+import sys
 from io import BytesIO
 from typing import Optional
 
@@ -320,7 +322,7 @@ def generate_data(img: Image, prio_img: Optional[Image.Image], both_img: Optiona
             logger.warning(f"\"{name}\" has wrong_colors colors!\n    {', '.join(wrong_colors)}")
         if out_of_image:
             logger.warning(f"Ran out of normal image with config: '{cfg.cfg}', image: \"{name}\"")
-        save(False, f"../outputs/{struct.get('name')}.{'dot' if cfg.is_overlay else 'full'}.png", single_img)
+        save(False, f"{main_dir}/outputs/{struct.get('name')}.{'dot' if cfg.is_overlay else 'full'}.png", single_img)
 
     # generate json and put pixels into images
     for name, struct_data in structures.items():
@@ -348,6 +350,7 @@ if __name__ == "__main__":
     parser.add_argument("--config", type=str, action='append')
     args = parser.parse_args()
 
+    main_dir = f"{os.path.dirname(os.path.abspath(sys.argv[0]))}/.."
     path_exists(args.pixel_config)
     path_exists(args.picture_folder, False)
     pixel_config = toml.load(args.pixel_config)
@@ -361,7 +364,7 @@ if __name__ == "__main__":
     for cfg in args.config:
         work_config(cfg, args.picture_folder)
 
-    json_path = "../outputs/userscript.config.json"
+    json_path = f"{main_dir}/outputs/userscript.config.json"
     userscript_config = {
         "l": []
     }
