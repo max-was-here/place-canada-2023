@@ -23,41 +23,47 @@ startx = 90
 starty = 150
 priority = 127
 
+ [[structure]]
+ name = "goose"
+ file = "goose13-clean.png"
+ startx = 1435
+ starty = 332
+ priority = 120
+
+ [[structure]]
+ name = "fspez_leaf"
+ file = "fspez_leaf.png"
+ startx = 1406
+ starty = -159
+ priority = 110
 
  [[structure]]
  name = "love_geese"
  file = "love_geese.png"
  startx = -114
  starty = 15
- priority = 110
-
- [[structure]]
- name = "goose"
- file = "goose13-clean.png"
- startx = 1435
- starty = 332
- priority = 125
+ priority = 90
 
  [[structure]]
  name = "canada_miniheart"
  file = "canada_miniheart.png"
  startx = -1092
  starty = -998
- priority = 125
+ priority = 80
 
  [[structure]]
  name = "canadiantire_mini"
  file = "canadiantire_mini.png"
  startx = -3
  starty = -688
- priority = 125
+ priority = 80
 
  [[structure]]
  name = "canada_babypole"
  file = "canada_babypole.png"
  startx = -1217
  starty = -897
- priority = 125
+ priority = 80
 
 # [[structure]]
 # name = "scotland"
