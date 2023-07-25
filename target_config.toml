@@ -39,7 +39,7 @@ priority = 127
 
  [[structure]]
  name = "toronto_road"
- file = "love_geese.png"
+ file = "toronto_road.png"
  startx = -1377
  starty = 393
  priority = 100
