@@ -27,7 +27,7 @@ priority = 127
  [[structure]]
  name = "love_geese"
  file = "love_geese.png"
- startx = -1148
+ startx = -114
  starty = 15
  priority = 110
 
