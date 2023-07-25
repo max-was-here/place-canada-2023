@@ -33,7 +33,7 @@ priority = 127
  [[structure]]
  name = "fspez_leaf"
  file = "fspez_leaf.png"
- startx = 1406
+ startx = 1405
  starty = -159
  priority = 110
 
