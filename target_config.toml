@@ -32,9 +32,9 @@ priority = 127
 
  [[structure]]
  name = "fspez_leaf"
- file = "fspez_leaf.png"
- startx = 1405
- starty = -159
+ file = "fvckspezleaf-text.png"
+ startx = 1406
+ starty = -158
  priority = 110
 
  [[structure]]
